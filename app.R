@@ -4,15 +4,18 @@ library(dplyr)
 library(ggplot2)
 library(aplpack)
 library(reshape2)
+library(stringr)
+library(shinycssloaders)
 
-addResourcePath(prefix = "images", directoryPath = "images/")
-addResourcePath(prefix = "js", directoryPath = "js/")
+addResourcePath("images", "images")
+theme_set(theme_bw())
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
-                h4("This dashboard enables teachers to view student's scores and grade them. It allows for viewing class results as well as individual results, and can help teachers assess how the grading scheme and the assessment type affect the class results."),
+                a(href = "https://oaiti.org", target = "_blank", img(src = "images/oaiti_transparent.png", width = "135")),
+                h4("About"),
+                HTML("This dashboard enables teachers to view student's scores and grade them. It allows for viewing class results as well as individual results, and can help teachers assess how the grading scheme and the assessment type affect the class results."),
                 hr(),
-                
                 tabsetPanel(
                     tabPanel("Options",
                              wellPanel(
@@ -98,15 +101,17 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                              )
                     ),
                     tabPanel("Class",
-                             helpText("This tab displays class statistics. It shows histograms for final grades and scores, how similar or Different students are, and correlation in % scores between different types of assessments"),
+                             HTML("This tab displays class statistics. It shows histograms for final grades and scores, how similar or Different students are, and correlation in % scores between different types of assessments"),
+                             hr(),
+                             h4("Grade Visualizations"),
                              fluidRow(
                                  column(width = 6,
-                                        plotOutput("plot1"),
-                                        plotOutput("plot2")
+                                        withSpinner(plotOutput("plot1")),
+                                        withSpinner(plotOutput("plot2"))
                                  ),
                                  column(width = 6,
-                                        plotOutput("plot3"),
-                                        plotOutput("plot4"),
+                                        withSpinner(plotOutput("plot3")),
+                                        withSpinner(plotOutput("plot4")),
                                         fluidRow(
                                             column(width = 6,
                                                    selectizeInput("x", "X Variable", choices=NULL)
@@ -117,15 +122,17 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                         )
                                  )
                              ),
-                             dataTableOutput("grades")
+                             hr(),
+                             h4("Final Grades"),
+                             withSpinner(dataTableOutput("grades"))
                     ),
                     tabPanel("Individual",
-                             HTML("The different assessment types are represented by different features of the face. If the student recieves a high score on a particular assessment, the size of the corresponding facial feature is increased.<br><br>
-Test - Head size<br>
-Projects - Mouth<br>
-Homework - Nose<br>
-Lab - Eye<br>
-Quiz - Hair"),
+                             HTML("The different assessment types are represented by different features of the face. If the student receives a high score on a particular assessment, the size of the corresponding facial feature is increased.<br><br>
+                                  Test - Head size<br>
+                                  Projects - Mouth<br>
+                                  Homework - Nose<br>
+                                  Lab - Eye<br>
+                                  Quiz - Hair"),
                              hr(),
                              fluidRow(
                                  column(width = 3,
@@ -134,15 +141,20 @@ Quiz - Hair"),
                                         textOutput("stugrade")
                                  ),
                                  column(width = 9,
+                                        h4("Chernoff Face"),
                                         plotOutput("face", height = "700px", width = "700px"),
+                                        hr(),
+                                        h4("Student Grades on Different Assessments"),
                                         dataTableOutput("studentmean"),
-                                        dataTableOutput("studentscores"),
-                                        dataTableOutput("test"),
-                                        dataTableOutput("test2"),
-                                        dataTableOutput("test3")
+                                        hr(),
+                                        h4("Overall Student Information"),
+                                        dataTableOutput("studentscores")
+                                        #dataTableOutput("test"),
+                                        #dataTableOutput("test2"),
+                                        #dataTableOutput("test3")
                                  )
                              )
-                    )))
+                             )))
 
 server <- ## Server definition
     shinyServer(function(input, output, session) {
@@ -159,7 +171,9 @@ server <- ## Server definition
             
             my.list <- list()
             for (i in 1:length(assns)) {
-                my.list[[i]] <- selectizeInput(paste("var", i, sep = ""), assns[i], c("Homework", "Lab", "Quiz", "Project", "Test"))
+                res <- c("Homework", "Lab", "Quiz", "Project", "Test")[which(!is.na(str_match(assns[i], c("Homework", "Lab", "Quiz", "Project", "Test"))[,1]))]
+                if (length(res) == 0) res <- "Homework"
+                my.list[[i]] <- selectizeInput(paste("var", i, sep = ""), assns[i], c("Homework", "Lab", "Quiz", "Project", "Test"), selected = res)
             }
             
             my.list
@@ -306,7 +320,7 @@ server <- ## Server definition
         })
         
         grade.first <- reactive({
-            if (is.null(input$data)) return(read.csv("www/example/data-new.csv"))
+            if (is.null(input$data)) return(read.csv("data/grades_anon1.csv"))
             
             grades.temp <- read.csv(input$data$datapath)
             grades.temp[is.na(grades.temp)] <- 0
@@ -506,4 +520,4 @@ server <- ## Server definition
         })
     })
 
-runApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server)
