@@ -80,20 +80,20 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                             h4("Grading Weights"),
                                             helpText("The are specified in terms of percentage weights for each type of assessment."),
                                             fluidRow(
-                                                column(width = 2, 
-                                                       numericInput("Homeworkperc", "Homework Percent", value = 20, min = 0, max = 100)
+                                                column(width = 3, 
+                                                       numericInput("Homeworkperc", "Homework %", value = 20, min = 0, max = 100)
                                                 ),
                                                 column(width = 2, 
-                                                       numericInput("Labperc", "Lab Percent", value = 10, min = 0, max = 100)
+                                                       numericInput("Labperc", "Lab %", value = 10, min = 0, max = 100)
                                                 ),
                                                 column(width = 2, 
-                                                       numericInput("Quizperc", "Quiz Percent", value = 10, min = 0, max = 100)
+                                                       numericInput("Quizperc", "Quiz %", value = 10, min = 0, max = 100)
                                                 ),
                                                 column(width = 2, 
-                                                       numericInput("Projectperc", "Project Percent", value = 20, min = 0, max = 100)
+                                                       numericInput("Projectperc", "Project %", value = 20, min = 0, max = 100)
                                                 ),
                                                 column(width = 2, 
-                                                       numericInput("Testperc", "Test Percent", value = 40, min = 0, max = 100)
+                                                       numericInput("Testperc", "Test %", value = 40, min = 0, max = 100)
                                                 )
                                             )   
                                      )
