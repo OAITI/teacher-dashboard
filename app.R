@@ -20,7 +20,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                     tabPanel("Options",
                              wellPanel(
                                  fluidRow(
-                                     column(width = 6,
+                                     column(width = 5,
                                             h4("Grading Data"),
                                             helpText("In order to grade students the type of assessment (Homework/Lab/Project/Quiz/Test) should be specified. There is an option for specifying the maximum possible points for each type of assessment."),
                                             
@@ -38,7 +38,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                             )
                                      ),
                                      
-                                     column(width = 6,
+                                     column(width = 7,
                                             h4("Grading Configuration"),
                                             helpText("The final Grade can be calculated using the US system of A to F, or A to F with +/-, or just as a Pass/Fail. The cutoffs for each grade can be automatic or specified manually"),
                                             radioButtons("gradescale", "Grading Scale", choices = c("US (A-F)" = "traditional", "US (With +/-)" = "plusminus", "Pass/Fail" = "passfail"), inline = TRUE),
@@ -80,19 +80,19 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                             h4("Grading Weights"),
                                             helpText("The are specified in terms of percentage weights for each type of assessment."),
                                             fluidRow(
-                                                column(width = 3, 
+                                                column(width = 2, 
                                                        numericInput("Homeworkperc", "Homework Percent", value = 20, min = 0, max = 100)
                                                 ),
-                                                column(width = 3, 
+                                                column(width = 2, 
                                                        numericInput("Labperc", "Lab Percent", value = 10, min = 0, max = 100)
                                                 ),
-                                                column(width = 3, 
+                                                column(width = 2, 
                                                        numericInput("Quizperc", "Quiz Percent", value = 10, min = 0, max = 100)
                                                 ),
-                                                column(width = 3, 
+                                                column(width = 2, 
                                                        numericInput("Projectperc", "Project Percent", value = 20, min = 0, max = 100)
                                                 ),
-                                                column(width = 3, 
+                                                column(width = 2, 
                                                        numericInput("Testperc", "Test Percent", value = 40, min = 0, max = 100)
                                                 )
                                             )   
