@@ -12,6 +12,9 @@ theme_set(theme_bw())
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
+                
+                includeCSS("css/styles.css"),
+                
                 a(href = "https://oaiti.org", target = "_blank", img(src = "images/oaiti_transparent.png", width = "135")),
                 h4("About"),
                 HTML("This dashboard enables teachers to view student's scores and grade them. It allows for viewing class results as well as individual results, and can help teachers assess how the grading scheme and the assessment type affect the class results."),
